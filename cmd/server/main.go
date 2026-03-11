@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 )
 
 func main() {
@@ -26,13 +27,30 @@ func main() {
 
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
-	buf := make([]byte, 1024)
-	n, err := conn.Read(buf)
-	if err != nil {
-		log.Println(err)
+
+	for {
+
+		conn.SetReadDeadline(time.Now().Add(time.Second))
+
+		buf := make([]byte, 1024)
+		n, err := conn.Read(buf)
+		if err != nil {
+			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+				continue
+			} else {
+				log.Println("Connection closed:", err)
+				break
+			}
+		}
+
+		fmt.Println("Recieved:", string(buf[:n]))
+
+		fmt.Println(conn)
+		fmt.Fprintf(conn, "Echo!\n")
+		if err != nil {
+			log.Println("error writing to client:", err)
+			break
+		}
+
 	}
-
-	fmt.Println(string(buf[:n]))
-
-	fmt.Fprintf(conn, "test - "+string(buf[:n]))
 }

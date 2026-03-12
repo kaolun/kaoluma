@@ -1,57 +1,21 @@
 package main
 
 import (
-	"fmt"
+	"kaoluma/internal/network"
 	"log"
 	"net"
-	"time"
 )
 
 func main() {
-	ln, err := net.Listen("tcp", ":8080")
+	port := ":8080"
+	listener, err := network.StartListener(port)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("failed to start listener:", err)
 	}
-	defer ln.Close()
+	defer listener.Close()
+	log.Println("server listening on port:", port)
 
-	for {
-		conn, err := ln.Accept()
-		if err != nil {
-			log.Println(err)
-		}
-
-		go handleConnection(conn)
-	}
-
-}
-
-func handleConnection(conn net.Conn) {
-	defer conn.Close()
-
-	buf := make([]byte, 1024)
-
-	for {
-
-		conn.SetReadDeadline(time.Now().Add(time.Second))
-
-		n, err := conn.Read(buf)
-		if err != nil {
-			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-				continue
-			} else {
-				log.Println("Connection closed:", err)
-				break
-			}
-		}
-
-		fmt.Println("Recieved:", string(buf[:n]))
-		fmt.Println("raw:", buf)
-
-		fmt.Fprintf(conn, "Echo!\n")
-		if err != nil {
-			log.Println("error writing to client:", err)
-			break
-		}
-
-	}
+	network.AcceptLoop(listener, func(conn net.Conn) {
+		log.Println("handling handling handling")
+	})
 }

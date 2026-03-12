@@ -45,8 +45,8 @@ func handleConnection(conn net.Conn) {
 		}
 
 		fmt.Println("Recieved:", string(buf[:n]))
+		fmt.Println("raw:", buf)
 
-		fmt.Println(conn)
 		fmt.Fprintf(conn, "Echo!\n")
 		if err != nil {
 			log.Println("error writing to client:", err)

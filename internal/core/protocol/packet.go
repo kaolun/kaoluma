@@ -38,7 +38,7 @@ func DecodePacket(conn net.Conn) (Packet, error) {
 	}, nil
 }
 
-func EcodePacket(packet Packet) []byte {
+func EncodePacket(packet Packet) []byte {
 	buf := make([]byte, 5+len(packet.Data))
 
 	buf[0] = byte(packet.Type)

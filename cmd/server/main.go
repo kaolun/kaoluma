@@ -17,5 +17,6 @@ func main() {
 
 	network.AcceptLoop(listener, func(conn net.Conn) {
 		log.Println("handling handling handling")
+		network.HandleConnection(conn)
 	})
 }

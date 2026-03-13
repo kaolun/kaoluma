@@ -14,9 +14,9 @@ func main() {
 
 	packet := protocol.Packet{
 		Type: 1,
-		Data: []byte{143, 67, 67, 67, 67, 143, 143},
+		Data: []byte{143, 67, 67, 67, 67, 143, 143, 192, 192, 12, 1, 1, 1, 1, 1, 1},
 	}
-	data := protocol.EcodePacket(packet)
+	data := protocol.EncodePacket(packet)
 	conn.Write(data)
 
 	buf := make([]byte, 1024)
@@ -25,7 +25,7 @@ func main() {
 		log.Println(err)
 	}
 
-	log.Println(string(buf[:n]))
+	log.Println(buf[:n])
 
 	conn.Close()
 }

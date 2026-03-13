@@ -2,6 +2,7 @@ package network
 
 import (
 	"kaoluma/internal/core/protocol"
+	"kaoluma/internal/handlers"
 	"log"
 	"net"
 	"time"
@@ -32,8 +33,10 @@ func HandleConnection(conn net.Conn) {
 			log.Println("connection closed:", err)
 			break
 		}
-		log.Println(packet)
-		//dispatcher function
+		err = handlers.Dispatch(conn, packet)
+		if err != nil {
+			log.Println("error handling packet", err)
+		}
 
 	}
 }

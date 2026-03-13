@@ -1,6 +1,7 @@
 package main
 
 import (
+	"kaoluma/internal/core/protocol"
 	"log"
 	"net"
 )
@@ -11,13 +12,11 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	//var i string
-	//fmt.Scan(&i)
-	data := []byte{
-		1,
-		0, 0, 0, 2,
-		143, 67,
+	packet := protocol.Packet{
+		Type: 1,
+		Data: []byte{143, 67, 67, 67, 67, 143, 143},
 	}
+	data := protocol.EcodePacket(packet)
 	conn.Write(data)
 
 	buf := make([]byte, 1024)

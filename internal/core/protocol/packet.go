@@ -37,3 +37,13 @@ func DecodePacket(conn net.Conn) (Packet, error) {
 		Data: dataBuf,
 	}, nil
 }
+
+func EcodePacket(packet Packet) []byte {
+	buf := make([]byte, 5+len(packet.Data))
+
+	buf[0] = byte(packet.Type)
+	binary.BigEndian.PutUint32(buf[1:5], uint32(len(packet.Data)))
+	copy(buf[5:], packet.Data)
+
+	return buf
+}

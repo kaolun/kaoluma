@@ -1,7 +1,12 @@
 package protocol
 
-//this is so confusing
-
 type PacketType uint8
 
-const ()
+const (
+	PacketEcho PacketType = 1
+)
+
+type Packet struct {
+	Type PacketType
+	Data []byte
+}

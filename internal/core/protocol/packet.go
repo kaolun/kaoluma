@@ -9,7 +9,7 @@ import (
 
 const MaxPacketSize = 64 * 1024
 
-func decodePacket(conn net.Conn) (Packet, error) {
+func DecodePacket(conn net.Conn) (Packet, error) {
 	var typeBuf [1]byte
 	_, err := io.ReadFull(conn, typeBuf[:])
 	if err != nil {

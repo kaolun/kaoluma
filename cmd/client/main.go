@@ -22,7 +22,10 @@ func main() {
 		Type: 10,
 		Data: []byte{143, 67, 67, 67, 67, 143, 143, 192, 192, 12, 1, 1, 1, 1, 1, 1},
 	}
-	data := protocol.EncodePacket(packet)
+	data, err := protocol.EncodePacket(packet)
+	if err != nil {
+		log.Println(err)
+	}
 	conn.Write(data)
 
 	buf := make([]byte, 1024)

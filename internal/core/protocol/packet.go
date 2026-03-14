@@ -38,12 +38,15 @@ func DecodePacket(conn net.Conn) (Packet, error) {
 	}, nil
 }
 
-func EncodePacket(packet Packet) []byte {
+func EncodePacket(packet Packet) ([]byte, error) {
+	if len(packet.Data) > MaxPacketSize {
+		return nil, fmt.Errorf("packet too large: %d", len(packet.Data))
+	}
 	buf := make([]byte, 5+len(packet.Data))
 
 	buf[0] = byte(packet.Type)
 	binary.BigEndian.PutUint32(buf[1:5], uint32(len(packet.Data)))
 	copy(buf[5:], packet.Data)
 
-	return buf
+	return buf, nil
 }

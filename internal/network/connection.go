@@ -10,7 +10,7 @@ import (
 
 func HandleConnection(conn net.Conn) {
 	defer conn.Close()
-	//handshake? here later?
+
 	conn.SetReadDeadline(time.Now().Add(5 * time.Second))
 	err := PerformHandshake(conn)
 	if err != nil {

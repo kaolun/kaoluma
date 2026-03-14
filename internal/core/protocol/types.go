@@ -10,6 +10,8 @@ const (
 	PacketHandshakeReject PacketType = 3
 
 	PacketEcho PacketType = 10
+	PacketPing PacketType = 11
+	PacketPong PacketType = 12
 )
 
 type Packet struct {

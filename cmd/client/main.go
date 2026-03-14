@@ -2,6 +2,7 @@ package main
 
 import (
 	"kaoluma/internal/core/protocol"
+	"kaoluma/internal/network"
 	"log"
 	"net"
 )
@@ -11,9 +12,14 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	err = network.InitiateHandshake(conn)
+	if err != nil {
+		conn.Close()
+		log.Fatal(err)
+	}
 
 	packet := protocol.Packet{
-		Type: 2,
+		Type: 10,
 		Data: []byte{143, 67, 67, 67, 67, 143, 143, 192, 192, 12, 1, 1, 1, 1, 1, 1},
 	}
 	data := protocol.EncodePacket(packet)

@@ -8,9 +8,34 @@ import (
 	"net"
 )
 
-//func InitiateHandshake(conn net.Conn) error {
+func InitiateHandshake(conn net.Conn) error {
+	versionBuf := make([]byte, 2)
+	binary.BigEndian.PutUint16(versionBuf, protocol.Version)
 
-//}
+	packet := protocol.Packet{
+		Type: protocol.PacketHandshake,
+		Data: versionBuf,
+	}
+
+	err := transport.SendPacket(conn, packet)
+	if err != nil {
+		return fmt.Errorf("failed to send handshake: %d", err)
+	}
+
+	responsePacket, err := protocol.DecodePacket(conn)
+	if err != nil {
+		return fmt.Errorf("failed to decode handshake response: %d", err)
+	}
+
+	switch responsePacket.Type {
+	case protocol.PacketHandshakeAck:
+		return nil
+	case protocol.PacketHandshakeReject:
+		return fmt.Errorf("handshake rejected")
+	default:
+		return fmt.Errorf("unknown packet type wth: %d", responsePacket.Type)
+	}
+}
 
 func PerformHandshake(conn net.Conn) error {
 	packet, err := protocol.DecodePacket(conn)

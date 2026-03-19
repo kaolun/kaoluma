@@ -19,7 +19,7 @@ func main() {
 	}
 
 	packet := protocol.Packet{
-		Type: 10,
+		Type: protocol.PacketEcho,
 		Data: []byte{143, 67, 67, 67, 67, 143, 143, 192, 192, 12, 1, 1, 1, 1, 1, 1},
 	}
 	data, err := protocol.EncodePacket(packet)

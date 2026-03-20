@@ -5,13 +5,13 @@ const Version uint16 = 1
 type PacketType uint8
 
 const (
-	PacketHandshake       PacketType = 1
-	PacketHandshakeAck    PacketType = 2
-	PacketHandshakeReject PacketType = 3
+	PacketHandshake PacketType = iota + 1
+	PacketHandshakeAck
+	PacketHandshakeReject
 
-	PacketEcho PacketType = 10
-	PacketPing PacketType = 11
-	PacketPong PacketType = 12
+	PacketEcho
+	PacketPing
+	PacketPong
 )
 
 type Packet struct {

@@ -4,7 +4,7 @@ import (
 	"net"
 )
 
-const Version uint16 = 1
+const Version uint16 = 2
 
 type PacketType uint8
 

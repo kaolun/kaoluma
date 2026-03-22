@@ -4,20 +4,19 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"net"
 )
 
 const MaxPacketSize = 64 * 1024
 
-func DecodePacket(conn net.Conn) (Packet, error) {
+func DecodePacket(c *Client) (Packet, error) {
 	var typeBuf [1]byte
-	_, err := io.ReadFull(conn, typeBuf[:])
+	_, err := io.ReadFull(c.Conn, typeBuf[:])
 	if err != nil {
 		return Packet{}, err
 	}
 
 	var lengthBuf [4]byte
-	_, err = io.ReadFull(conn, lengthBuf[:])
+	_, err = io.ReadFull(c.Conn, lengthBuf[:])
 	if err != nil {
 		return Packet{}, err
 	}
@@ -27,7 +26,7 @@ func DecodePacket(conn net.Conn) (Packet, error) {
 	}
 
 	dataBuf := make([]byte, int(length))
-	_, err = io.ReadFull(conn, dataBuf)
+	_, err = io.ReadFull(c.Conn, dataBuf)
 	if err != nil {
 		return Packet{}, err
 	}

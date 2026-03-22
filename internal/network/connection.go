@@ -11,8 +11,12 @@ import (
 func HandleConnection(conn net.Conn) {
 	defer conn.Close()
 
+	client := &protocol.Client{
+		Conn: conn,
+	}
+
 	conn.SetReadDeadline(time.Now().Add(5 * time.Second))
-	err := PerformHandshake(conn)
+	err := PerformHandshake(client)
 	if err != nil {
 		log.Println("handshake failed:", err)
 		return
@@ -25,7 +29,7 @@ func HandleConnection(conn net.Conn) {
 			continue
 		}
 
-		packet, err := protocol.DecodePacket(conn)
+		packet, err := protocol.DecodePacket(client)
 		if err != nil {
 			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
 				continue
@@ -33,7 +37,7 @@ func HandleConnection(conn net.Conn) {
 			log.Println("connection closed:", err)
 			break
 		}
-		err = handlers.Dispatch(conn, packet)
+		err = handlers.Dispatch(client, packet)
 		if err != nil {
 			log.Println("error handling packet", err)
 		}

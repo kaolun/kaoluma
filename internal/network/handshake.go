@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"kaoluma/internal/core/protocol"
 	"kaoluma/internal/core/transport"
-	"net"
 )
 
-func InitiateHandshake(conn net.Conn) error {
+func InitiateHandshake(c *protocol.Client) error {
 	versionBuf := make([]byte, 2)
 	binary.BigEndian.PutUint16(versionBuf, protocol.Version)
 
@@ -17,12 +16,12 @@ func InitiateHandshake(conn net.Conn) error {
 		Data: versionBuf,
 	}
 
-	err := transport.SendPacket(conn, packet)
+	err := transport.SendPacket(c.Conn, packet)
 	if err != nil {
 		return fmt.Errorf("failed to send handshake: %d", err)
 	}
 
-	responsePacket, err := protocol.DecodePacket(conn)
+	responsePacket, err := protocol.DecodePacket(c)
 	if err != nil {
 		return fmt.Errorf("failed to decode handshake response: %d", err)
 	}
@@ -37,8 +36,8 @@ func InitiateHandshake(conn net.Conn) error {
 	}
 }
 
-func PerformHandshake(conn net.Conn) error {
-	packet, err := protocol.DecodePacket(conn)
+func PerformHandshake(c *protocol.Client) error {
+	packet, err := protocol.DecodePacket(c)
 	if err != nil {
 		return err
 	}
@@ -52,7 +51,7 @@ func PerformHandshake(conn net.Conn) error {
 	version := binary.BigEndian.Uint16(packet.Data[:2])
 
 	if version != protocol.Version {
-		err := transport.SendPacket(conn, protocol.Packet{
+		err := transport.SendPacket(c.Conn, protocol.Packet{
 			Type: protocol.PacketHandshakeReject,
 		})
 		if err != nil {
@@ -61,7 +60,7 @@ func PerformHandshake(conn net.Conn) error {
 		return fmt.Errorf("invalid handshake version length")
 	}
 
-	err = transport.SendPacket(conn, protocol.Packet{
+	err = transport.SendPacket(c.Conn, protocol.Packet{
 		Type: protocol.PacketHandshakeAck,
 	})
 	if err != nil {

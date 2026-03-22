@@ -3,17 +3,16 @@ package handlers
 import (
 	"fmt"
 	"kaoluma/internal/core/protocol"
-	"net"
 )
 
-func Dispatch(conn net.Conn, packet protocol.Packet) error {
+func Dispatch(c *protocol.Client, packet protocol.Packet) error {
 	switch packet.Type {
 
 	case protocol.PacketEcho:
-		return handleEcho(conn, packet)
+		return handleEcho(c, packet)
 
 	case protocol.PacketPing:
-		return Handlepong(conn)
+		return Handlepong(c)
 
 	default:
 		return fmt.Errorf("unknown packet type %d", packet.Type)

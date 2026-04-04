@@ -1,8 +1,6 @@
 package protocol
 
-import (
-	"net"
-)
+import "net"
 
 const Version uint16 = 2
 
@@ -29,12 +27,4 @@ type Packet struct {
 
 type Client struct {
 	Conn net.Conn
-
-	//fileState os.File
-}
-
-type FileStart struct {
-	nameLen  uint16
-	name     []byte
-	fileSize uint64
 }

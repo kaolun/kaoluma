@@ -1,13 +1,13 @@
-package network
+package transport
 
 import (
 	"encoding/binary"
 	"fmt"
 	"kaoluma/internal/core/protocol"
-	"kaoluma/internal/core/transport"
+	"net"
 )
 
-func InitiateHandshake(c *protocol.Client) error {
+func InitiateHandshake(conn net.Conn) error {
 	versionBuf := make([]byte, 2)
 	binary.BigEndian.PutUint16(versionBuf, protocol.Version)
 
@@ -16,12 +16,12 @@ func InitiateHandshake(c *protocol.Client) error {
 		Data: versionBuf,
 	}
 
-	err := transport.SendPacket(c.Conn, packet)
+	err := SendPacket(conn, packet)
 	if err != nil {
 		return fmt.Errorf("failed to send handshake: %d", err)
 	}
 
-	responsePacket, err := protocol.DecodePacket(c)
+	responsePacket, err := protocol.DecodePacket(conn)
 	if err != nil {
 		return fmt.Errorf("failed to decode handshake response: %d", err)
 	}
@@ -30,14 +30,14 @@ func InitiateHandshake(c *protocol.Client) error {
 	case protocol.PacketHandshakeAck:
 		return nil
 	case protocol.PacketHandshakeReject:
-		return fmt.Errorf("handshake rejected")
+		return fmt.Errorf("connection refused, check client version")
 	default:
 		return fmt.Errorf("unknown packet type wth: %d", responsePacket.Type)
 	}
 }
 
-func PerformHandshake(c *protocol.Client) error {
-	packet, err := protocol.DecodePacket(c)
+func PerformHandshake(conn net.Conn) error {
+	packet, err := protocol.DecodePacket(conn)
 	if err != nil {
 		return err
 	}
@@ -51,16 +51,16 @@ func PerformHandshake(c *protocol.Client) error {
 	version := binary.BigEndian.Uint16(packet.Data[:2])
 
 	if version != protocol.Version {
-		err := transport.SendPacket(c.Conn, protocol.Packet{
+		err := SendPacket(conn, protocol.Packet{
 			Type: protocol.PacketHandshakeReject,
 		})
 		if err != nil {
 			return fmt.Errorf("failed to send handshake reject")
 		}
-		return fmt.Errorf("invalid handshake version length")
+		return fmt.Errorf("invalid handshake version")
 	}
 
-	err = transport.SendPacket(c.Conn, protocol.Packet{
+	err = SendPacket(conn, protocol.Packet{
 		Type: protocol.PacketHandshakeAck,
 	})
 	if err != nil {

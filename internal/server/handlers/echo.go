@@ -5,6 +5,6 @@ import (
 	"kaoluma/internal/core/transport"
 )
 
-func handleEcho(c *protocol.Client, packet protocol.Packet) error {
+func HandleEcho(c *protocol.Client, packet protocol.Packet) error {
 	return transport.SendPacket(c.Conn, packet)
 }

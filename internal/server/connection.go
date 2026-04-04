@@ -1,8 +1,8 @@
-package network
+package server
 
 import (
 	"kaoluma/internal/core/protocol"
-	"kaoluma/internal/handlers"
+	"kaoluma/internal/core/transport"
 	"log"
 	"net"
 	"time"
@@ -16,7 +16,7 @@ func HandleConnection(conn net.Conn) {
 	}
 
 	conn.SetReadDeadline(time.Now().Add(5 * time.Second))
-	err := PerformHandshake(client)
+	err := transport.PerformHandshake(client.Conn)
 	if err != nil {
 		log.Println("handshake failed:", err)
 		return
@@ -29,7 +29,7 @@ func HandleConnection(conn net.Conn) {
 			continue
 		}
 
-		packet, err := protocol.DecodePacket(client)
+		packet, err := protocol.DecodePacket(client.Conn)
 		if err != nil {
 			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
 				continue
@@ -37,7 +37,7 @@ func HandleConnection(conn net.Conn) {
 			log.Println("connection closed:", err)
 			break
 		}
-		err = handlers.Dispatch(client, packet)
+		err = dispatch(client, packet)
 		if err != nil {
 			log.Println("error handling packet", err)
 		}

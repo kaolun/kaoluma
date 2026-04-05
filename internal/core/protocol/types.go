@@ -26,5 +26,6 @@ type Packet struct {
 }
 
 type Client struct {
-	Conn net.Conn
+	Conn      net.Conn
+	SendQueue chan Packet
 }

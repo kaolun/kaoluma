@@ -21,18 +21,13 @@ func main() {
 
 	c := &protocol.Client{
 		Conn: conn,
+
+		SendQueue: make(chan protocol.Packet, 100),
 	}
 
 	go client.ReadLoop(c)
+	go client.SendLoop(c)
+	go client.PingLoop(c)
 
-	for i := 0; i < 50; i++ {
-		packet := protocol.Packet{
-			Type: protocol.PacketPing,
-		}
-		err = transport.SendPacket(c.Conn, packet)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		time.Sleep(time.Second)
-	}
+	time.Sleep(time.Minute)
 }

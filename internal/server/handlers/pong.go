@@ -5,7 +5,7 @@ import (
 	"kaoluma/internal/core/transport"
 )
 
-func HandlePong(c *protocol.Client) error {
+func HandlePing(c *protocol.Client) error {
 	err := transport.SendPacket(c.Conn, protocol.Packet{
 		Type: protocol.PacketPong,
 	})

@@ -1,16 +1,16 @@
-package server
+package client
 
 import (
 	"fmt"
+	"kaoluma/internal/client/handlers"
 	"kaoluma/internal/core/protocol"
-	"kaoluma/internal/server/handlers"
 )
 
 func dispatch(c *protocol.Client, packet protocol.Packet) error {
 	switch packet.Type {
 
-	case protocol.PacketPing:
-		return handlers.HandlePing(c)
+	case protocol.PacketPong:
+		return handlers.HandlePong(packet)
 
 	default:
 		return fmt.Errorf("unknown packet type %d", packet.Type)

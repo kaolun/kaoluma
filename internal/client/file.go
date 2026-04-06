@@ -9,8 +9,6 @@ import (
 	"os"
 )
 
-const chunkSize = 50 * 1024
-
 func SendFile(c *protocol.Client, path string, rng *rand.Rand) error {
 	f, err := os.Open(path)
 	if err != nil {
@@ -37,7 +35,7 @@ func SendFile(c *protocol.Client, path string, rng *rand.Rand) error {
 		Data: startData,
 	}
 
-	buffer := make([]byte, chunkSize)
+	buffer := make([]byte, protocol.ChunkSize)
 	chunkIndex := uint32(0)
 	for {
 		n, err := f.Read(buffer)

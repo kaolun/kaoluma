@@ -3,21 +3,20 @@ package server
 import (
 	"fmt"
 	"kaoluma/internal/core/protocol"
-	"kaoluma/internal/server/handlers"
 )
 
-func dispatch(c *protocol.Client, packet protocol.Packet) error {
+func dispatch(s *Server, c *protocol.Client, packet protocol.Packet) error {
 	switch packet.Type {
 
 	case protocol.PacketPing:
-		return handlers.HandlePing(c)
+		return handlePing(c)
 
 	case protocol.PacketFileStart:
-		return handlers.HandleFileStart(c, packet)
+		return handleFileStart(s, c, packet)
 	case protocol.PacketFileChunk:
-		return handlers.HandleFileChunk(c, packet)
+		return handleFileChunk(s, c, packet)
 	case protocol.PacketFileClose:
-		return handlers.HandleFileClose(c, packet)
+		return handleFileClose(s, c, packet)
 
 	default:
 		return fmt.Errorf("unknown packet type %d", packet.Type)

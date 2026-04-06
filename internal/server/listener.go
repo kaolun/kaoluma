@@ -14,14 +14,14 @@ func StartListener(port string) (net.Listener, error) {
 	return ln, nil
 }
 
-func AcceptLoop(listener net.Listener, handleFunc func(conn net.Conn)) {
+func AcceptLoop(s *Server, listener net.Listener, handleFunc func(s *Server, conn net.Conn)) {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Println(err)
 			continue
 		}
-		go handleFunc(conn)
+		go handleFunc(s, conn)
 
 	}
 }

@@ -8,18 +8,24 @@ import (
 	"time"
 )
 
-func HandleConnection(conn net.Conn) {
+func HandleConnection(s *Server, conn net.Conn) {
 	defer conn.Close()
 
-	client := &protocol.Client{
-		Conn: conn,
-	}
-
 	conn.SetReadDeadline(time.Now().Add(5 * time.Second))
-	err := transport.PerformHandshake(client.Conn)
+	err := transport.PerformHandshake(conn)
 	if err != nil {
 		log.Println("handshake failed:", err)
 		return
+	}
+
+	s.NextClientID++
+	client := &protocol.Client{
+		ID:   s.NextClientID,
+		Conn: conn,
+	}
+	s.Clients[client.ID] = client
+	for id, client := range s.Clients {
+		log.Printf("id: %d, conn: %v\n", id, client.Conn)
 	}
 
 	for {
@@ -35,9 +41,10 @@ func HandleConnection(conn net.Conn) {
 				continue
 			}
 			log.Println("connection closed:", err)
+			delete(s.Clients, client.ID)
 			break
 		}
-		err = dispatch(client, packet)
+		err = dispatch(s, client, packet)
 		if err != nil {
 			log.Println("error handling packet", err)
 		}

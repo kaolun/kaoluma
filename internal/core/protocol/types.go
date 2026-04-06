@@ -5,6 +5,8 @@ import (
 )
 
 const Version uint16 = 3
+const ChunkSize = 50 * 1024
+const MaxPacketSize = 70 * 1024
 
 type PacketType uint8
 
@@ -28,6 +30,7 @@ type Packet struct {
 }
 
 type Client struct {
+	ID        uint32
 	Conn      net.Conn
 	SendQueue chan Packet
 }
@@ -45,4 +48,10 @@ type FileChunk struct {
 }
 type FileEnd struct {
 	FileID uint32
+}
+type IncomingFile struct {
+	FileName  string
+	FileSize  uint64
+	FileOwner uint32
+	Path      string
 }

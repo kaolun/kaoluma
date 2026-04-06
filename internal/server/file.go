@@ -72,18 +72,22 @@ func handleFileClose(s *Server, c *protocol.Client, packet protocol.Packet) erro
 	if !ok {
 		return fmt.Errorf("unknown id: %v", fileID)
 	}
-	if err := os.MkdirAll("./downloads", 0755); err != nil {
+
+	downloadsDir := getDownloadsDir()
+	if err := os.MkdirAll(downloadsDir, 0755); err != nil {
 		return err
 	}
-	finalPath := "./downloads/" + f.FileName
+	finalPath := filepath.Join(downloadsDir, f.FileName)
 	if err := os.Rename(f.Path, finalPath); err != nil {
 		return err
 	}
+
 	log.Println("file done:", finalPath)
 	delete(s.IncomingFiles, fileID)
 	return nil
 }
 
+// again i dont really love this because it makes the file gigantic but i guess its semi low level so maybe okay??? idk
 func decodeFileStart(data []byte) (uint32, string, uint64, error) {
 	buf := bytes.NewReader(data)
 

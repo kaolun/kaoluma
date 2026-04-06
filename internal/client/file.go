@@ -97,7 +97,6 @@ func buildFileStart(fileID uint32, size int64, filename string) ([]byte, error) 
 	return buf.Bytes(), nil
 }
 
-// TODO add error checking later yk
 func buildFileChunk(fileID uint32, index uint32, data []byte) ([]byte, error) {
 	buf := new(bytes.Buffer)
 

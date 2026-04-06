@@ -7,11 +7,7 @@ import (
 	"log"
 )
 
-func HandleFileStart(c *protocol.Client) error {
-	packet, err := protocol.DecodePacket(c.Conn)
-	if err != nil {
-		return err
-	}
+func HandleFileStart(c *protocol.Client, packet protocol.Packet) error {
 
 	buf := bytes.NewReader(packet.Data)
 
@@ -28,5 +24,5 @@ func HandleFileStart(c *protocol.Client) error {
 	name := string(nameBytes)
 
 	log.Println("filestart ts ( ID:", fileID, ", Name:", name, ", Size:", size, ")")
-	return err
+	return nil
 }

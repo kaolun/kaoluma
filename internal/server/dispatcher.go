@@ -13,7 +13,7 @@ func dispatch(c *protocol.Client, packet protocol.Packet) error {
 		return handlers.HandlePing(c)
 
 	case protocol.PacketFileStart:
-		return handlers.HandleFileStart(c)
+		return handlers.HandleFileStart(c, packet)
 
 	default:
 		return fmt.Errorf("unknown packet type %d", packet.Type)

@@ -14,6 +14,10 @@ func dispatch(c *protocol.Client, packet protocol.Packet) error {
 
 	case protocol.PacketFileStart:
 		return handlers.HandleFileStart(c, packet)
+	case protocol.PacketFileChunk:
+		return handlers.HandleFileChunk(c, packet)
+	case protocol.PacketFileClose:
+		return handlers.HandleFileClose(c, packet)
 
 	default:
 		return fmt.Errorf("unknown packet type %d", packet.Type)

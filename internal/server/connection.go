@@ -20,9 +20,11 @@ func HandleConnection(s *Server, conn net.Conn) {
 
 	s.NextClientID++
 	client := &protocol.Client{
-		ID:   s.NextClientID,
-		Conn: conn,
+		ID:        s.NextClientID,
+		Conn:      conn,
+		SendQueue: make(chan protocol.Packet, 100),
 	}
+	go SendLoop(client)
 	s.Clients[client.ID] = client
 	for id, client := range s.Clients {
 		log.Printf("id: %d, conn: %v\n", id, client.Conn)

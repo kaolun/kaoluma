@@ -33,9 +33,6 @@ func main() {
 	go client.PingLoop(c)
 
 	time.Sleep(time.Second * 3)
-	err = client.SendFile(c, "testfile.txt", rng)
-	if err != nil {
-		log.Fatal("file send failed:", err)
-	}
+
 	time.Sleep(time.Minute)
 }

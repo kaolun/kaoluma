@@ -2,6 +2,7 @@ package protocol
 
 import (
 	"net"
+	"time"
 )
 
 const Version uint16 = 3
@@ -19,6 +20,17 @@ const (
 	PacketPing
 	PacketPong
 
+	JoinCodeRequest
+	JoinCodeResponse
+
+	ListClientsRequest
+	ListClientsResponse
+
+	RequestConnection
+	RequestCodeConnection
+	AcceptConnection
+	RejectConnection
+
 	PacketFileStart
 	PacketFileChunk
 	PacketFileClose
@@ -33,6 +45,11 @@ type Client struct {
 	ID        uint32
 	Conn      net.Conn
 	SendQueue chan Packet
+
+	Visible  bool
+	JoinCode string
+
+	LastSeen time.Time
 }
 
 type FileStart struct {

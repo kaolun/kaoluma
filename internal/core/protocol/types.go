@@ -26,18 +26,16 @@ const (
 	ListClientsRequest
 	ListClientsResponse
 
-	RequestConnection
+	RequestConnection //
 	RequestCodeConnection
-	AcceptConnection
-	RejectConnection
+	AcceptConnection //
+	RejectConnection //
 
-	PacketFileStart
-	PacketFileChunk
-	PacketFileClose
 )
 
 type Packet struct {
 	Type     PacketType
+	SenderID uint32
 	TargetID uint32
 	Data     []byte
 }

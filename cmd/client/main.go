@@ -34,5 +34,11 @@ func main() {
 
 	time.Sleep(time.Second * 3)
 
-	time.Sleep(time.Minute)
+	p := protocol.Packet{
+		Type:     protocol.RequestConnection,
+		TargetID: 1,
+	}
+	c.SendQueue <- p
+
+	time.Sleep(time.Minute * 100)
 }

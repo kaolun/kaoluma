@@ -5,8 +5,6 @@ import (
 	"kaoluma/internal/core/protocol"
 	"kaoluma/internal/core/transport"
 	"log"
-	//"math/rand"
-	"time"
 )
 
 func main() {
@@ -22,7 +20,7 @@ func main() {
 		log.Fatal("Handshake failed:", err)
 	}
 
-	c := &protocol.Client{
+	c := &client.Client{
 		Conn: conn,
 
 		SendQueue: make(chan protocol.Packet, 100),
@@ -31,14 +29,10 @@ func main() {
 	go client.ReadLoop(c)
 	go client.SendLoop(c)
 	go client.PingLoop(c)
+	log.Println("cli is not designed for ease of use")
 
-	time.Sleep(time.Second * 3)
+	go client.RenderLoop(c)
+	go client.InputLoop(c)
 
-	p := protocol.Packet{
-		Type:     protocol.RequestConnection,
-		TargetID: 1,
-	}
-	c.SendQueue <- p
-
-	time.Sleep(time.Minute * 100)
+	select {}
 }

@@ -1,11 +1,6 @@
 package protocol
 
-import (
-	"net"
-	"time"
-)
-
-const Version uint16 = 4
+const Version uint16 = 5
 const ChunkSize = 50 * 1024
 const MaxPacketSize = 70 * 1024
 
@@ -23,6 +18,9 @@ const (
 	JoinCodeRequest
 	JoinCodeResponse
 
+	VisibilityChangeRequest
+	VisibilityChangeConfirm
+
 	ListClientsRequest
 	ListClientsResponse
 
@@ -38,15 +36,4 @@ type Packet struct {
 	SenderID uint32
 	TargetID uint32
 	Data     []byte
-}
-
-type Client struct {
-	ID        uint32
-	Conn      net.Conn
-	SendQueue chan Packet
-
-	Visible  bool
-	JoinCode string
-
-	LastSeen time.Time
 }

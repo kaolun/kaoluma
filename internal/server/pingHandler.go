@@ -4,7 +4,7 @@ import (
 	"kaoluma/internal/core/protocol"
 )
 
-func handlePing(c *protocol.Client) error {
+func handlePing(c *ClientInfo) error {
 	pong := protocol.Packet{
 		Type: protocol.PacketPong,
 	}

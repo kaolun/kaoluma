@@ -5,7 +5,7 @@ import (
 	"kaoluma/internal/core/protocol"
 )
 
-func dispatch(s *Server, c *protocol.Client, packet protocol.Packet) error {
+func dispatch(s *Server, c *ClientInfo, packet protocol.Packet) error {
 	if packet.TargetID == 0 {
 		return handleServerPacket(s, c, packet)
 	}
@@ -21,7 +21,7 @@ func dispatch(s *Server, c *protocol.Client, packet protocol.Packet) error {
 	return s.forward(c, packet)
 }
 
-func handleServerPacket(s *Server, c *protocol.Client, packet protocol.Packet) error {
+func handleServerPacket(s *Server, c *ClientInfo, packet protocol.Packet) error {
 	switch packet.Type {
 
 	case protocol.PacketPing:

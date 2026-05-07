@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func ReadLoop(c *protocol.Client) {
+func ReadLoop(c *Client) {
 	for {
 		c.Conn.SetReadDeadline(time.Now().Add(time.Second))
 

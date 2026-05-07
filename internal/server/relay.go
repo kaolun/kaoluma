@@ -19,7 +19,7 @@ func (s *Server) allowed(from, to uint32) bool {
 	return s.PeerConnections[from][to]
 }
 
-func (s *Server) forward(sender *protocol.Client, p protocol.Packet) error {
+func (s *Server) forward(sender *ClientInfo, p protocol.Packet) error {
 	s.Mu.RLock()
 	target := s.Clients[p.TargetID]
 	s.Mu.RUnlock()

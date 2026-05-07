@@ -5,7 +5,7 @@ import (
 	"kaoluma/internal/core/protocol"
 )
 
-func dispatch(c *protocol.Client, packet protocol.Packet) error {
+func dispatch(c *Client, packet protocol.Packet) error {
 	switch packet.Type {
 
 	case protocol.PacketPong:

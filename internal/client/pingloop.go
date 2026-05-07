@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func PingLoop(c *protocol.Client) {
+func PingLoop(c *Client) {
 	ping := protocol.Packet{Type: protocol.PacketPing}
 	ticker := time.NewTicker(time.Second * 3)
 	defer ticker.Stop()

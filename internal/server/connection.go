@@ -19,7 +19,7 @@ func HandleConnection(s *Server, conn net.Conn) {
 	}
 	s.Mu.Lock()
 	s.NextClientID++
-	client := &protocol.Client{
+	client := &ClientInfo{
 		ID:        s.NextClientID,
 		Conn:      conn,
 		SendQueue: make(chan protocol.Packet, 100),

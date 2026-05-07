@@ -1,12 +1,11 @@
 package server
 
 import (
-	"kaoluma/internal/core/protocol"
 	"kaoluma/internal/core/transport"
 	"log"
 )
 
-func SendLoop(c *protocol.Client) {
+func SendLoop(c *ClientInfo) {
 	for {
 		packet := <-c.SendQueue
 		err := transport.SendPacket(c.Conn, packet)

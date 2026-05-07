@@ -5,12 +5,12 @@ import (
 	"kaoluma/internal/core/protocol"
 	"kaoluma/internal/core/transport"
 	"log"
-	"math/rand"
+	//"math/rand"
 	"time"
 )
 
 func main() {
-	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
+	//rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 	port := ":8080"
 
 	conn, err := client.Connect(port)

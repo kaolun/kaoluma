@@ -14,6 +14,13 @@ func DecodePacket(conn net.Conn) (Packet, error) {
 		return Packet{}, err
 	}
 
+	var tIdBuff [4]byte
+	_, err = io.ReadFull(conn, tIdBuff[:])
+	if err != nil {
+		return Packet{}, err
+	}
+	targetID := binary.BigEndian.Uint32(tIdBuff[:])
+
 	var lengthBuf [4]byte
 	_, err = io.ReadFull(conn, lengthBuf[:])
 	if err != nil {
@@ -31,8 +38,9 @@ func DecodePacket(conn net.Conn) (Packet, error) {
 	}
 
 	return Packet{
-		Type: PacketType(typeBuf[0]),
-		Data: dataBuf,
+		Type:     PacketType(typeBuf[0]),
+		TargetID: targetID,
+		Data:     dataBuf,
 	}, nil
 }
 
@@ -40,11 +48,12 @@ func EncodePacket(packet Packet) ([]byte, error) {
 	if len(packet.Data) > MaxPacketSize {
 		return nil, fmt.Errorf("packet too large: %d", len(packet.Data))
 	}
-	buf := make([]byte, 5+len(packet.Data))
+	buf := make([]byte, 9+len(packet.Data))
 
 	buf[0] = byte(packet.Type)
-	binary.BigEndian.PutUint32(buf[1:5], uint32(len(packet.Data)))
-	copy(buf[5:], packet.Data)
+	binary.BigEndian.PutUint32(buf[1:5], uint32(packet.TargetID))
+	binary.BigEndian.PutUint32(buf[5:9], uint32(len(packet.Data)))
+	copy(buf[9:], packet.Data)
 
 	return buf, nil
 }

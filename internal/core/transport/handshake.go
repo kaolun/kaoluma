@@ -12,18 +12,19 @@ func InitiateHandshake(conn net.Conn) error {
 	binary.BigEndian.PutUint16(versionBuf, protocol.Version)
 
 	packet := protocol.Packet{
-		Type: protocol.PacketHandshake,
-		Data: versionBuf,
+		Type:     protocol.PacketHandshake,
+		TargetID: 0,
+		Data:     versionBuf,
 	}
 
 	err := SendPacket(conn, packet)
 	if err != nil {
-		return fmt.Errorf("failed to send handshake: %d", err)
+		return fmt.Errorf("failed to send handshake: %v", err)
 	}
 
 	responsePacket, err := protocol.DecodePacket(conn)
 	if err != nil {
-		return fmt.Errorf("failed to decode handshake response: %d", err)
+		return fmt.Errorf("failed to decode handshake response: %v", err)
 	}
 
 	switch responsePacket.Type {
@@ -32,7 +33,7 @@ func InitiateHandshake(conn net.Conn) error {
 	case protocol.PacketHandshakeReject:
 		return fmt.Errorf("connection refused, check client version")
 	default:
-		return fmt.Errorf("unknown packet type wth: %d", responsePacket.Type)
+		return fmt.Errorf("unknown packet type wth: %v", responsePacket.Type)
 	}
 }
 
@@ -52,7 +53,8 @@ func PerformHandshake(conn net.Conn) error {
 
 	if version != protocol.Version {
 		err := SendPacket(conn, protocol.Packet{
-			Type: protocol.PacketHandshakeReject,
+			Type:     protocol.PacketHandshakeReject,
+			TargetID: 0,
 		})
 		if err != nil {
 			return fmt.Errorf("failed to send handshake reject")
@@ -61,7 +63,8 @@ func PerformHandshake(conn net.Conn) error {
 	}
 
 	err = SendPacket(conn, protocol.Packet{
-		Type: protocol.PacketHandshakeAck,
+		Type:     protocol.PacketHandshakeAck,
+		TargetID: 0,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to write handshake ack")

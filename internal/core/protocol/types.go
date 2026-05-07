@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const Version uint16 = 3
+const Version uint16 = 4
 const ChunkSize = 50 * 1024
 const MaxPacketSize = 70 * 1024
 
@@ -37,8 +37,9 @@ const (
 )
 
 type Packet struct {
-	Type PacketType
-	Data []byte
+	Type     PacketType
+	TargetID uint32
+	Data     []byte
 }
 
 type Client struct {
@@ -50,25 +51,4 @@ type Client struct {
 	JoinCode string
 
 	LastSeen time.Time
-}
-
-type FileStart struct {
-	FileID     uint32
-	FileSize   uint64
-	NameLength uint16
-	FileName   []byte
-}
-type FileChunk struct {
-	FileID     uint32
-	ChuckIndex uint32
-	Data       []byte
-}
-type FileEnd struct {
-	FileID uint32
-}
-type IncomingFile struct {
-	FileName  string
-	FileSize  uint64
-	FileOwner uint32
-	Path      string
 }

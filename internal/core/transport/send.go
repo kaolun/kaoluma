@@ -12,6 +12,13 @@ func SendPacket(conn net.Conn, packet protocol.Packet) error {
 	if err != nil {
 		return err
 	}
-	_, err = conn.Write(encoded)
+	var sent int
+	for sent < len(encoded) {
+		n, err := conn.Write(encoded)
+		if err != nil {
+			return err
+		}
+		sent += n
+	}
 	return err
 }

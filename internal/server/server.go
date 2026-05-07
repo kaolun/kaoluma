@@ -2,6 +2,7 @@ package server
 
 import (
 	"kaoluma/internal/core/protocol"
+	"sync"
 )
 
 type Server struct {
@@ -10,6 +11,8 @@ type Server struct {
 
 	PeerConnections map[uint32]map[uint32]bool
 	CodeToClient    map[string]*protocol.Client
+
+	Mu sync.RWMutex
 }
 
 func NewServer() *Server {

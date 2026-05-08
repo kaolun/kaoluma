@@ -5,6 +5,7 @@ import (
 	"kaoluma/internal/core/protocol"
 	"kaoluma/internal/core/transport"
 	"log"
+	"time"
 )
 
 func main() {
@@ -22,7 +23,10 @@ func main() {
 
 	c := &client.Client{
 		Conn: conn,
-
+		UI: &client.UIState{
+			Visible: false,
+			Online:  false,
+		},
 		SendQueue: make(chan protocol.Packet, 100),
 	}
 
@@ -31,8 +35,9 @@ func main() {
 	go client.PingLoop(c)
 	log.Println("cli is not designed for ease of use")
 
-	go client.RenderLoop(c)
-	go client.InputLoop(c)
+	time.Sleep(time.Second)
+	c.Render()
+	go c.InputLoop()
 
 	select {}
 }

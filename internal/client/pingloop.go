@@ -2,7 +2,6 @@ package client
 
 import (
 	"kaoluma/internal/core/protocol"
-	"log"
 	"time"
 )
 
@@ -19,6 +18,5 @@ func PingLoop(c *Client) {
 }
 
 func handlePong(packet protocol.Packet) error {
-	log.Println("ping success")
 	return nil
 }

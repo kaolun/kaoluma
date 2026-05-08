@@ -8,7 +8,7 @@ import (
 type Client struct {
 	Conn net.Conn
 
-	Visibile bool
+	Visible  bool
 	JoinCode string
 
 	UI *UIState
@@ -16,18 +16,8 @@ type Client struct {
 	SendQueue chan protocol.Packet
 }
 
-func RenderLoop(c *Client) {
-
-}
-
-func InputLoop(c *Client) {
-
-}
-
 type UIState struct {
 	Online  bool
-	Visbile bool
-
-	Messages        []string
-	PendingRequests []uint32
+	Visible bool
+	Logs    []string
 }

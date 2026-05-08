@@ -24,11 +24,10 @@ const (
 	ListClientsRequest
 	ListClientsResponse
 
-	RequestConnection //
+	RequestConnection
 	RequestCodeConnection
-	AcceptConnection //
-	RejectConnection //
-
+	AcceptConnection
+	RejectConnection
 )
 
 type Packet struct {

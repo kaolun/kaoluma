@@ -22,6 +22,7 @@ func HandleConnection(s *Server, conn net.Conn) {
 	client := &ClientInfo{
 		ID:        s.NextClientID,
 		Conn:      conn,
+		Visible:   false,
 		SendQueue: make(chan protocol.Packet, 100),
 	}
 	go SendLoop(client)

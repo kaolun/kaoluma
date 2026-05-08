@@ -36,7 +36,6 @@ func DecodePacket(conn net.Conn) (Packet, error) {
 	if length > MaxPacketSize {
 		return Packet{}, fmt.Errorf("packet exceeded size limit: %d bytes", length)
 	}
-
 	dataBuf := make([]byte, int(length))
 	_, err = io.ReadFull(conn, dataBuf)
 	if err != nil {

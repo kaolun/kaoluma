@@ -18,7 +18,7 @@ func main() {
 	}
 
 	log.Print("\033[H\033[2J")
-	log.Println("cli is designed for development")
+	log.Println("dev cli")
 
 	time.Sleep(time.Second * 3)
 	c.Render()

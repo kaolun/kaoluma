@@ -23,8 +23,11 @@ func ReadLoop(c *Client) {
 			select {
 			case <-c.Done:
 			default:
-				c.Log("Connection lost: " + err.Error())
 				close(c.Done)
+				c.UI.Mu.Lock()
+				c.UI.Online = false
+				c.UI.Mu.Unlock()
+				c.Log("Connection lost: " + err.Error())
 			}
 			return
 		}

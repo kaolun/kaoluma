@@ -1,6 +1,6 @@
 package protocol
 
-const Version uint16 = 5
+const Version uint16 = 6
 const ChunkSize = 50 * 1024
 const MaxPacketSize = 70 * 1024
 
@@ -18,14 +18,7 @@ const (
 	JoinCodeRequest
 	JoinCodeResponse
 
-	VisibilityChangeRequest
-	VisibilityChangeConfirm
-
-	ListClientsRequest
-	ListClientsResponse
-
 	RequestConnection
-	RequestCodeConnection
 	AcceptConnection
 	RejectConnection
 )

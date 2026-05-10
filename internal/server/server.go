@@ -21,8 +21,8 @@ type ClientInfo struct {
 	ID        uint32
 	Conn      net.Conn
 	SendQueue chan protocol.Packet
+	Done      chan struct{}
 
-	Visible  bool
 	JoinCode string
 	LastSeen time.Time
 }

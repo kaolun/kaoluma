@@ -3,13 +3,19 @@ package client
 import (
 	"kaoluma/internal/core/protocol"
 	"net"
+	"sync"
+	"time"
 )
 
-type Client struct {
-	Conn net.Conn
+const Port = ":8080"
 
-	Visible  bool
+type Client struct {
+	Conn     net.Conn
+	LastPong time.Time
+	Done     chan struct{}
+
 	JoinCode string
+	Mu       sync.RWMutex
 
 	UI *UIState
 
@@ -17,7 +23,8 @@ type Client struct {
 }
 
 type UIState struct {
-	Online  bool
-	Visible bool
-	Logs    []string
+	Online bool
+	Logs   []string
+
+	Mu sync.RWMutex
 }

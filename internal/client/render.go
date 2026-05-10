@@ -3,12 +3,13 @@ package client
 import "fmt"
 
 func (c *Client) Render() {
+	c.UI.Mu.RLock()
+	defer c.UI.Mu.RUnlock()
 	fmt.Print("\033[H\033[2J") //clears terminal(idk)
 
 	fmt.Println("=================")
-	fmt.Println("|    Kaoluma    |")
+	fmt.Println("|    kaoluma    |")
 	fmt.Println("=================")
-	fmt.Println()
 
 	for _, log := range c.UI.Logs {
 		fmt.Println(log)
@@ -18,18 +19,9 @@ func (c *Client) Render() {
 	if c.UI.Online {
 		online = "Connected"
 	}
-	visible := "Hidden"
-	if c.UI.Visible {
-		visible = "Visible"
-	}
 
-	fmt.Println("_________________________")
-	fmt.Println(online, " | ", visible)
+	fmt.Println("__________________")
+	fmt.Println("| ", online, " |")
 	fmt.Print(">>>")
 
-}
-
-func (c *Client) Log(msg string) {
-	c.UI.Logs = append(c.UI.Logs, msg)
-	c.Render()
 }

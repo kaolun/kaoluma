@@ -22,16 +22,12 @@ func HandleConnection(s *Server, conn net.Conn) {
 	client := &ClientInfo{
 		ID:        s.NextClientID,
 		Conn:      conn,
-		Visible:   false,
 		SendQueue: make(chan protocol.Packet, 100),
+		Done:      make(chan struct{}),
 	}
 	go SendLoop(client)
 	s.Clients[client.ID] = client
 	s.Mu.Unlock()
-
-	for id, client := range s.Clients {
-		log.Printf("id: %d, conn: %v\n", id, client.Conn)
-	}
 
 	for {
 		err := conn.SetReadDeadline(time.Now().Add(30 * time.Second))
@@ -49,6 +45,7 @@ func HandleConnection(s *Server, conn net.Conn) {
 			s.Mu.Lock()
 			delete(s.Clients, client.ID)
 			s.Mu.Unlock()
+			close(client.Done)
 			break
 		}
 		err = dispatch(s, client, packet)

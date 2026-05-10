@@ -1,12 +1,10 @@
-package server
+package client
 
 import (
 	"fmt"
 	"os"
 	"path/filepath"
 )
-
-//this SHOULD BE CLIENT LATER JUST FILESYSTEM FUNCS
 
 func getDownloadsDir() string {
 	if dir, ok := os.LookupEnv("USERPROFILE"); ok {

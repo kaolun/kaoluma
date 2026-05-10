@@ -1,6 +1,10 @@
 .env
-*.txt
 .DS_Store
+*.txt
 *.DS_Store
 *.jpg
+*.png
+*.wav
+*.mp3
+*.mp4
 *.zip

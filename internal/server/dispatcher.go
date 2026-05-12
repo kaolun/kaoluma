@@ -27,6 +27,9 @@ func handleServerPacket(s *Server, c *ClientInfo, packet protocol.Packet) error 
 	case protocol.PacketPing:
 		return handlePing(c)
 
+	case protocol.JoinCodeRequest:
+		return c.GenerateJoincode(s)
+
 	default:
 		return fmt.Errorf("unknown packet type %d", packet.Type)
 	}

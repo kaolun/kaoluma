@@ -41,6 +41,7 @@ func (c *Client) handleCommand(line string) {
 			err := c.Connect()
 			if err != nil {
 				c.Log("ERROR:" + err.Error())
+				return
 			}
 			c.Render()
 		} else {
@@ -53,9 +54,17 @@ func (c *Client) handleCommand(line string) {
 			err := c.Conn.Close()
 			if err != nil {
 				c.Log("ERROR:" + err.Error())
+				return
 			}
 			c.UI.Online = false
 			c.Log("Connection closed")
+		} else {
+			c.Log("Not connected")
+		}
+
+	case "code":
+		if c.UI.Online {
+			c.RequestJoinCode()
 		} else {
 			c.Log("Not connected")
 		}

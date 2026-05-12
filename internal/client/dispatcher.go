@@ -11,6 +11,9 @@ func dispatch(c *Client, packet protocol.Packet) error {
 	case protocol.PacketPong:
 		return handlePong(c, packet)
 
+	case protocol.JoinCodeResponse:
+		return c.HandleJoinCode(packet)
+
 	default:
 		return fmt.Errorf("unknown packet type %d", packet.Type)
 	}

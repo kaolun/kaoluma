@@ -8,8 +8,6 @@ import (
 )
 
 func main() {
-	//rng := rand.New(rand.NewSource(time.Now().UnixNano()))
-
 	c := &client.Client{
 		UI: &client.UIState{
 			Online: false,

@@ -15,6 +15,7 @@ type Client struct {
 	Done     chan struct{}
 
 	JoinCode string
+	PeerID   uint32
 	Mu       sync.RWMutex
 
 	UI *UIState

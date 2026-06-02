@@ -9,14 +9,14 @@ func (s *Server) allowed(from, to uint32) bool {
 	s.Mu.RLock()
 	defer s.Mu.RUnlock()
 
-	if s.PeerConnections == nil {
-		return false
-	}
-	if s.PeerConnections[from] == nil {
+	fromClient := s.Clients[from]
+	toClient := s.Clients[to]
+
+	if toClient == nil {
 		return false
 	}
 
-	return s.PeerConnections[from][to]
+	return fromClient.PeerID == to && toClient.PeerID == from
 }
 
 func (s *Server) forward(sender *ClientInfo, p protocol.Packet) error {

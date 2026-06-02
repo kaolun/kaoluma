@@ -35,5 +35,7 @@ func (c *Client) Connect() error {
 	go SendLoop(c)
 	go PingLoop(c)
 
+	c.RequestJoinCode()
+
 	return err
 }

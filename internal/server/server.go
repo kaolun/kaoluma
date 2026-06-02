@@ -11,8 +11,7 @@ type Server struct {
 	Clients      map[uint32]*ClientInfo
 	NextClientID uint32
 
-	PeerConnections map[uint32]map[uint32]bool
-	CodeToClient    map[string]*ClientInfo
+	CodeToClient map[string]*ClientInfo
 
 	Mu sync.RWMutex
 }
@@ -24,6 +23,7 @@ type ClientInfo struct {
 	Done      chan struct{}
 
 	JoinCode string
+	PeerID   uint32
 	LastSeen time.Time
 }
 
@@ -31,7 +31,6 @@ func NewServer() *Server {
 	return &Server{
 		Clients: make(map[uint32]*ClientInfo),
 
-		PeerConnections: make(map[uint32]map[uint32]bool),
-		CodeToClient:    make(map[string]*ClientInfo),
+		CodeToClient: make(map[string]*ClientInfo),
 	}
 }

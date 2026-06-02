@@ -26,7 +26,6 @@ func (c *Client) handleCommand(line string) {
 		//TODO add commands
 		c.Log("bro what are you doing yk this works")
 		c.Log("bublubbluhbluhbblubblbubb")
-
 	case "clear":
 		c.UI.Mu.Lock()
 		c.UI.Logs = nil
@@ -36,41 +35,82 @@ func (c *Client) handleCommand(line string) {
 		fmt.Print("\033[H\033[2J")
 		os.Exit(130)
 
-	case "connect":
+	case "server":
+		if len(parts) < 2 {
+			c.Log("'help' to see usage")
+		}
+		switch parts[1] {
+		case "connect":
+			if !c.UI.Online {
+				err := c.Connect()
+				if err != nil {
+					c.Log("ERROR:" + err.Error())
+					return
+				}
+				c.Render()
+			} else {
+				c.Log("Already connected")
+			}
+		case "disconnect":
+			if c.UI.Online {
+				close(c.Done)
+				err := c.Conn.Close()
+				if err != nil {
+					c.Log("ERROR:" + err.Error())
+					return
+				}
+				c.UI.Online = false
+				c.Log("Connection closed")
+			} else {
+				c.Log("Not connected")
+			}
+		case "code":
+			if c.UI.Online {
+				c.RequestJoinCode()
+			} else {
+				c.Log("Not connected")
+			}
+		default:
+			c.Log("Unknown arg:" + parts[1])
+		}
+	case "peer":
+		if len(parts) < 2 {
+			c.Log("'help' to see usage")
+			return
+		}
 		if !c.UI.Online {
-			err := c.Connect()
-			if err != nil {
-				c.Log("ERROR:" + err.Error())
+			c.Log("Error: not connected")
+			return
+		}
+		switch parts[1] {
+		case "connect":
+			if c.PeerID != 0 {
+				c.Log("Error: Already connected to peer")
 				return
 			}
-			c.Render()
-		} else {
-			c.Log("Already connected")
-		}
-
-	case "disconnect":
-		if c.UI.Online {
-			close(c.Done)
-			err := c.Conn.Close()
-			if err != nil {
-				c.Log("ERROR:" + err.Error())
+			if len(parts) < 3 {
+				c.Log("Usage: Peer Connect Joincode")
 				return
 			}
-			c.UI.Online = false
-			c.Log("Connection closed")
-		} else {
-			c.Log("Not connected")
-		}
+			err := c.RequestPeerConnection(strings.ToUpper(parts[2]))
+			if err != nil {
+				c.Log("ERROR:" + err.Error())
+			}
+		case "disconnect":
+			if c.PeerID == 0 {
+				c.Log("Error: Not connected to peer")
+			}
+			err := c.RequestPeerDisconnect()
+			if err != nil {
+				c.Log("ERROR:" + err.Error())
+			}
 
-	case "code":
-		if c.UI.Online {
-			c.RequestJoinCode()
-		} else {
-			c.Log("Not connected")
+		default:
+			c.Log("Unknown arg:" + parts[1])
 		}
 
 	default:
-		c.Log("unknown command:" + parts[0])
+		c.Log("Unknown command:" + parts[0])
 	}
 }
 

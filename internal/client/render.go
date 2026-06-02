@@ -15,13 +15,15 @@ func (c *Client) Render() {
 		fmt.Println(log)
 	}
 
-	online := "Disconnected"
-	if c.UI.Online {
-		online = "Connected"
+	if !c.UI.Online {
+		fmt.Println("________________")
+		fmt.Println("| Disconnected |")
+	} else {
+		code := c.JoinCode
+		fmt.Println("________________________")
+		fmt.Println("| Connected | ", code, " |")
 	}
 
-	fmt.Println("__________________")
-	fmt.Println("| ", online, " |")
 	fmt.Print(">>>")
 
 }

@@ -3,12 +3,11 @@ package client
 import "kaoluma/internal/core/protocol"
 
 func (c *Client) RequestJoinCode() {
-	request := protocol.Packet{
+	c.SendQueue <- protocol.Packet{
 		TargetID: 0,
 		Type:     protocol.JoinCodeRequest,
 	}
-	c.SendQueue <- request
-	c.Log("code requested")
+	c.Log("Code requested")
 }
 
 func (c *Client) HandleJoinCode(p protocol.Packet) error {
@@ -16,6 +15,6 @@ func (c *Client) HandleJoinCode(p protocol.Packet) error {
 	c.Mu.Lock()
 	c.JoinCode = code
 	c.Mu.Unlock()
-	c.Log("New joincode:" + code)
+	c.Log("New Joincode:" + code)
 	return nil
 }

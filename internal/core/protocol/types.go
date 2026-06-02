@@ -1,6 +1,6 @@
 package protocol
 
-const Version uint16 = 6
+const Version uint16 = 7
 const ChunkSize = 50 * 1024
 const MaxPacketSize = 70 * 1024
 
@@ -18,9 +18,14 @@ const (
 	JoinCodeRequest
 	JoinCodeResponse
 
-	RequestConnection
-	AcceptConnection
-	RejectConnection
+	RequestPeerConnection // data code
+	AcceptPeerConnection  // data id
+	RejectPeerConnection
+	NotifyPeerConnection // data id
+
+	DisconnectPeerConnection
+	ConfirmPeerDisconnect
+	NotifyPeerDisconnect
 )
 
 type Packet struct {

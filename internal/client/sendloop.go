@@ -9,11 +9,14 @@ func SendLoop(c *Client) {
 		select {
 		case <-c.Done:
 			return
-		case packet := <-c.SendQueue:
+		case packet, ok := <-c.SendQueue:
+			if !ok {
+				return
+			}
 			err := transport.SendPacket(c.Conn, packet)
 			if err != nil {
 				c.Log("Failed to send packet:" + err.Error())
-				continue
+				return
 			}
 		}
 	}

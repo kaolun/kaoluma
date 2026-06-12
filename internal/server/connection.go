@@ -11,8 +11,11 @@ import (
 func HandleConnection(s *Server, conn net.Conn) {
 	defer conn.Close()
 
-	conn.SetReadDeadline(time.Now().Add(5 * time.Second))
-	err := transport.PerformHandshake(conn)
+	err := conn.SetReadDeadline(time.Now().Add(5 * time.Second))
+	if err != nil {
+		log.Println("timeout failed:", err)
+	}
+	err = transport.PerformHandshake(conn)
 	if err != nil {
 		log.Println("handshake failed:", err)
 		return
